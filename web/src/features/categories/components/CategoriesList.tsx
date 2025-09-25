@@ -12,13 +12,19 @@ const renderItem = (category: Category) => (
 export default function CategoriesList() {
     const {data: categories} = useListCategories();
 
-    return <div>Categories List
-
-        <List<Category>
-            pagination
-            dataSource={categories}
-            rowKey={item => item.id}
-            renderItem={renderItem}
-        />
-    </div>
+    return <List<Category>
+        grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 2,
+            md: 4,
+            lg: 4,
+            xl: 6,
+            xxl: 3,
+        }}
+        pagination
+        dataSource={categories}
+        rowKey={item => item.id}
+        renderItem={renderItem}
+    />
 }
