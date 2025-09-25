@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import type { Category } from "../types";
+import {RootState} from "@/redux/store.ts";
 
 export type CategoriesSliceState = {
     isAddCategoryOpen: boolean;
@@ -33,3 +34,5 @@ const categoriesSlice = createSlice({
 export const {showAddCategory, hideAddCategory, showUpdateCategory, hideUpdateCategory} = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
+
+export const selectCategoryToUpdate = (state: RootState) => state.categories.categoryToUpdate;

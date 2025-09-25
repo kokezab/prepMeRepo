@@ -1,6 +1,6 @@
 import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import type { Category } from "../types";
+import type {Category, CreateCategoryInput} from "../types";
 
 const COLLECTION = "categories" as const;
 
@@ -24,8 +24,6 @@ export async function getCategory(id: string): Promise<Category | null> {
   if (!snapshot.exists()) return null;
   return mapDoc<Category>(snapshot);
 }
-
-export type CreateCategoryInput = Omit<Category, "id">;
 
 export async function addCategory(input: CreateCategoryInput): Promise<Category> {
   const colRef = collection(db, COLLECTION);
