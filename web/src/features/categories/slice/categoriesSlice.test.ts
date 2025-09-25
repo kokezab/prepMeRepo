@@ -4,7 +4,7 @@ import reducer, {
     hideUpdateCategory,
     showAddCategory,
     showUpdateCategory
-} from "./categoriesSlice";
+} from "./categoriesSlice.ts";
 
 const baseState: CategoriesSliceState = {
     isAddCategoryOpen: false,

@@ -1,9 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-
-type Category = {
-    id: string;
-    name: string;
-}
+import type { Category } from "../types";
 
 export type CategoriesSliceState = {
     isAddCategoryOpen: boolean;
