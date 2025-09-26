@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+}
+
+/* Utility classes */
+.center-50vh {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.center-100vh {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.p-24 {
+  padding: 24px;
+}
+
+/* Flex utilities */
+.min-h-100vh {
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+/* Spacing & typography utilities */
+.mr-24 {
+  margin-right: 24px;
+}
+
+.font-600 {
+  font-weight: 600;
+}

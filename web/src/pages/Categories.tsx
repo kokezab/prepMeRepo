@@ -1,0 +1,1 @@
+import CategoriesManagementPage from "@/features/categories/CategoriesManagementPage.tsx";export default CategoriesManagementPage;
