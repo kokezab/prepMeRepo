@@ -1,5 +1,5 @@
 import {Category} from "@/features/categories/types.ts";
-import {Button, Flex, Popconfirm, Space} from "antd";
+import {Button, Card, Flex, Popconfirm, Space} from "antd";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
 import {useAppDispatch} from "@/redux/hooks.ts";
 import {showUpdateCategory} from "@/features/categories/slice/categoriesSlice.ts";
@@ -18,7 +18,7 @@ export default function CategoryListItem({category}: { category: Category }) {
         deleteCategory(category.id);
     }
 
-    return <Flex justify='space-between' align='center'>
+    return <Card size='small'><Flex justify='space-between' align='center'>
         <span>{category.name}</span>
 
         <Space>
@@ -36,4 +36,5 @@ export default function CategoryListItem({category}: { category: Category }) {
             </Popconfirm>
         </Space>
     </Flex>
+    </Card>;
 }

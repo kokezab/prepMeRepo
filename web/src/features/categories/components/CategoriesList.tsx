@@ -22,7 +22,6 @@ export default function CategoriesList() {
             xl: 6,
             xxl: 3,
         }}
-        pagination
         dataSource={categories}
         rowKey={item => item.id}
         renderItem={renderItem}
