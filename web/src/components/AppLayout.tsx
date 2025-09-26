@@ -1,8 +1,10 @@
-import { Layout, Menu, theme, Button, Space, Typography } from 'antd';
+import { Layout, Menu, theme, Button, Space, Typography, Drawer, Grid } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useFirebaseUser } from '@/hooks/useFirebaseUser';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useMemo, useState } from 'react';
+import { MenuOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 
@@ -25,6 +27,9 @@ export default function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useFirebaseUser();
+  const screens = Grid.useBreakpoint();
+  const isMobile = useMemo(() => !screens.md, [screens]);
+  const [open, setOpen] = useState(false);
   const selectedKeys = items
     .map((i) => i.key)
     .filter((k) => location.pathname.startsWith(k));
@@ -34,14 +39,23 @@ export default function AppLayout() {
       <Header style={{ background: colorBgContainer }} className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="font-600 mr-24">PrepMe</div>
-          <Menu
-            mode="horizontal"
-            selectedKeys={selectedKeys.length ? selectedKeys : ['/categories']}
-            items={items}
-          />
+          {!isMobile && (
+            <Menu
+              mode="horizontal"
+              selectedKeys={selectedKeys.length ? selectedKeys : ['/categories']}
+              items={items}
+            />
+          )}
         </div>
         <div>
           <Space>
+            {isMobile && (
+              <Button
+                icon={<MenuOutlined />}
+                onClick={() => setOpen(true)}
+                aria-label="Open menu"
+              />
+            )}
             <Typography.Text>
               {user ? (user.displayName || user.email || 'Signed in') : ''}
             </Typography.Text>
@@ -62,6 +76,21 @@ export default function AppLayout() {
       <Content className="p-24">
         <Outlet />
       </Content>
+
+      <Drawer
+        title="Navigation"
+        placement="left"
+        open={open}
+        onClose={() => setOpen(false)}
+        bodyStyle={{ padding: 0 }}
+      >
+        <Menu
+          mode="inline"
+          selectedKeys={selectedKeys.length ? selectedKeys : ['/categories']}
+          items={items}
+          onClick={() => setOpen(false)}
+        />
+      </Drawer>
     </Layout>
   );
 }
