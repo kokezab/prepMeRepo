@@ -53,7 +53,7 @@ export default function UpdateCategoryModal() {
                        <Button onClick={onUpdate} type="primary" loading={isPending}>
                            Update
                        </Button>
-                   </Space>} destroyOnClose title="Update Category">
+                   </Space>} destroyOnHidden title="Update Category">
                 <Form<UpdateCategoryFormData>
                     form={form}
                     layout="vertical"
