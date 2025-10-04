@@ -11,12 +11,12 @@ vi.mock('../../../firebase.ts', () => {
 const hoisted = vi.hoisted(() => ({
   getDocsSpy: vi.fn(async () => ({
     docs: [
-      { id: '1', data: () => ({ categoryId: 'c1', text: 'Q1', authorId: 'u1', authorsAnswer: null }) },
-      { id: '2', data: () => ({ categoryId: 'c2', text: 'Q2', authorId: 'u2', authorsAnswer: 'A2' }) },
+      { id: '1', data: () => ({ categoryIds: ['c1'], text: 'Q1', authorId: 'u1', authorsAnswer: null }) },
+      { id: '2', data: () => ({ categoryIds: ['c2'], text: 'Q2', authorId: 'u2', authorsAnswer: 'A2' }) },
     ],
   })),
   addDocSpy: vi.fn(async () => ({ id: 'new-id' })),
-  getDocSpy: vi.fn(async () => ({ exists: () => true, id: '1', data: () => ({ categoryId: 'c1', text: 'Q1', authorId: 'u1', authorsAnswer: null }) })),
+  getDocSpy: vi.fn(async () => ({ exists: () => true, id: '1', data: () => ({ categoryIds: ['c1'], text: 'Q1', authorId: 'u1', authorsAnswer: null }) })),
   updateDocSpy: vi.fn(async () => {}),
   deleteDocSpy: vi.fn(async () => {}),
 }));
@@ -46,14 +46,14 @@ describe('questionsApi (unit mocked)', () => {
   it('should list questions', async () => {
     const questions = await listQuestions();
     expect(questions).toEqual([
-      { id: '1', categoryId: 'c1', text: 'Q1', authorId: 'u1', authorsAnswer: null },
-      { id: '2', categoryId: 'c2', text: 'Q2', authorId: 'u2', authorsAnswer: 'A2' },
+      { id: '1', categoryIds: ['c1'], text: 'Q1', authorId: 'u1', authorsAnswer: null },
+      { id: '2', categoryIds: ['c2'], text: 'Q2', authorId: 'u2', authorsAnswer: 'A2' },
     ]);
     expect(hoisted.getDocsSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should add a question', async () => {
-    const newQuestion = { categoryId: 'c3', text: 'Q3', authorId: 'u3', authorsAnswer: null };
+    const newQuestion = { categoryIds: ['c3'], text: 'Q3', authorId: 'u3', authorsAnswer: null };
     const added = await addQuestion(newQuestion);
     expect(added).toEqual({ id: 'new-id', ...newQuestion });
     expect(hoisted.addDocSpy).toHaveBeenCalledTimes(1);
@@ -61,7 +61,7 @@ describe('questionsApi (unit mocked)', () => {
 
   it('should get a question', async () => {
     const q = await getQuestion('1');
-    expect(q).toEqual({ id: '1', categoryId: 'c1', text: 'Q1', authorId: 'u1', authorsAnswer: null });
+    expect(q).toEqual({ id: '1', categoryIds: ['c1'], text: 'Q1', authorId: 'u1', authorsAnswer: null });
     expect(hoisted.getDocSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -69,7 +69,7 @@ describe('questionsApi (unit mocked)', () => {
     const res = await updateQuestion('1', { text: 'Updated' });
     expect(hoisted.updateDocSpy).toHaveBeenCalledTimes(1);
     // Our stubbed getDoc returns the original object
-    expect(res).toEqual({ id: '1', categoryId: 'c1', text: 'Q1', authorId: 'u1', authorsAnswer: null });
+    expect(res).toEqual({ id: '1', categoryIds: ['c1'], text: 'Q1', authorId: 'u1', authorsAnswer: null });
   });
 
   it('should delete a question', async () => {

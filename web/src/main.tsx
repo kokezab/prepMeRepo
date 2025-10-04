@@ -2,6 +2,7 @@ import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import App from './App.tsx'
 import './index.css';
+import 'react-quill/dist/quill.snow.css';
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {Provider} from "react-redux";
 import {store} from "@/redux/store.ts";

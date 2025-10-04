@@ -1,7 +1,6 @@
-import {HasId} from "@/lib/types.ts";
-
-export type Question = HasId & {
-    categoryId: string;
+export type Question = {
+    id: string;
+    categoryIds: string[];
     text: string;
     authorId: string;
     authorsAnswer: string | null;
