@@ -1,34 +1,26 @@
-import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { Collections } from "@/lib/collections.ts";
 import type {Category, CreateCategoryInput} from "../types";
 
-const COLLECTION = "categories" as const;
+const COLLECTION = Collections.categories;
 
-function mapDoc<T extends { id: string }>(snap: any): T {
-  const data = snap.data() || {};
-  return {
-    id: snap.id,
-    ...data,
-  } as T;
-}
+import {
+  listDocs,
+  getDocById,
+  addDocTo,
+  updateDocById,
+  deleteDocById,
+} from "@/lib/firestoreCrud";
 
 export async function listCategories(): Promise<Category[]> {
-  const colRef = collection(db, COLLECTION);
-  const snapshot = await getDocs(colRef);
-  return snapshot.docs.map((d) => mapDoc<Category>(d));
+  return listDocs<Category>(COLLECTION);
 }
 
 export async function getCategory(id: string): Promise<Category | null> {
-  const docRef = doc(db, COLLECTION, id);
-  const snapshot = await getDoc(docRef);
-  if (!snapshot.exists()) return null;
-  return mapDoc<Category>(snapshot);
+  return getDocById<Category>(COLLECTION, id);
 }
 
 export async function addCategory(input: CreateCategoryInput): Promise<Category> {
-  const colRef = collection(db, COLLECTION);
-  const newDoc = await addDoc(colRef, input);
-  return { id: newDoc.id, ...input };
+  return addDocTo<CreateCategoryInput>(COLLECTION, input);
 }
 
 export type UpdateCategoryInput = Partial<Omit<Category, "id">>;
@@ -37,14 +29,10 @@ export async function updateCategory(
   id: string,
   patch: UpdateCategoryInput
 ): Promise<Category | null> {
-  const docRef = doc(db, COLLECTION, id);
-  await updateDoc(docRef, patch as any);
-  const updated = await getDoc(docRef);
-  if (!updated.exists()) return null;
-  return mapDoc<Category>(updated);
+  return updateDocById<Category>(COLLECTION, id, patch as any);
 }
 
 export async function deleteCategory(id: string): Promise<void> {
-  const docRef = doc(db, COLLECTION, id);
-  await deleteDoc(docRef);
+  await deleteDocById(COLLECTION, id);
 }
+
