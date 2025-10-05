@@ -11,8 +11,10 @@ type Props = {
 export default function QuestionListItem({ question, onEdit, onDelete }: Props) {
   return (
     <Card size="small">
-      <Flex justify="space-between" align="center">
-        <Typography.Text>{question.text}</Typography.Text>
+      <Flex justify="space-between" align="center" wrap gap={8}>
+        <Typography.Paragraph style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginBottom: 0, flex: 1 }}>
+          {question.text}
+        </Typography.Paragraph>
         <Space>
           <Button onClick={onEdit} icon={<EditOutlined />} type="text" />
           <Popconfirm

@@ -16,7 +16,7 @@ export default function CreateCategoryForm() {
     return <>
         <Form<CreateCategoryFormData> form={form} layout="inline" onFinish={mutate} disabled={isPending}>
             <Form.Item name="name" rules={nameRules}>
-                <Input placeholder="Enter category name" />
+                <Input placeholder="Enter category name" autoFocus />
             </Form.Item>
             <Form.Item>
                 <Button loading={isPending} type="primary" htmlType='submit'>Create Category</Button>
