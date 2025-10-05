@@ -33,12 +33,19 @@ export default function UpdateQuestionModal() {
   const onUpdate = async () => {
     if (!question) return;
     const values = await form.validateFields();
+    const normalizeParBreaks = (html: string): string => {
+      const h = html || "";
+      if (/(<ol|<ul|<li|<h[1-6]|<blockquote|<pre|<code)/i.test(h)) return h;
+      const withoutOuter = h.replace(/^\s*<p>/i, "").replace(/<\/p>\s*$/i, "");
+      return withoutOuter.replace(/<\/p>\s*<p>/gi, "<br/>");
+    };
+    const authorsAnswerHtml = normalizeParBreaks((values.authorsAnswer as string) ?? "");
     await mutateAsync({
       id: question.id,
       patch: {
         categoryIds: (values.categoryIds as string[]) ?? [],
         text: values.text as string,
-        authorsAnswer: (values.authorsAnswer as string) ?? "",
+        authorsAnswer: authorsAnswerHtml,
       },
     });
     dispatch(hideUpdateQuestion());

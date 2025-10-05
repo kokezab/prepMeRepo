@@ -28,15 +28,24 @@ export default function CreateQuestionModal() {
   const handleCreate = async () => {
     try {
       const values = await form.validateFields();
+      const normalizeParBreaks = (html: string): string => {
+        const h = html || "";
+        // Only normalize if the ENTIRE content is made of paragraphs only (no other block tags)
+        const hasOtherBlocks = /<(ol|ul|li|h[1-6]|blockquote|pre|code|table)\b/i.test(h);
+        const isOnlyParagraphs = /^\s*(?:<p>[\s\S]*?<\/p>\s*)+$/i.test(h);
+        if (hasOtherBlocks || !isOnlyParagraphs) return h;
+        // Join adjacent paragraphs with <br/>
+        return h.replace(/<\/p>\s*<p>/gi, "<br/>").replace(/^\s*<p>|<\/p>\s*$/gi, "");
+      };
+
+      const authorsAnswerHtml = normalizeParBreaks((values.authorsAnswer as string) ?? "");
       const payload = {
         categoryIds: (values.categoryIds as string[]) ?? [],
         text: values.text as string,
         authorId: authorId,
-        authorsAnswer: (values.authorsAnswer as string) ?? "",
+        authorsAnswer: authorsAnswerHtml,
       };
 
-
-      console.log(values.authorsAnswer);
       await createMutation.mutateAsync(payload as any);
       form.resetFields();
       dispatch(hideAddQuestion());

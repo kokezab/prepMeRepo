@@ -17,6 +17,7 @@ export default function RichTextEditor({
         ["link", "blockquote", "code-block"],
         ["clean"],
       ],
+      clipboard: { matchVisual: false },
     }),
     []
   );
