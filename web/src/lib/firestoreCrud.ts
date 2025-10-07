@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import {HasId} from "@/lib/types.ts";
 
@@ -46,4 +46,14 @@ export async function updateDocById<T extends HasId>(
 export async function deleteDocById(collectionName: string, id: string): Promise<void> {
   const docRef = doc(db, collectionName, id);
   await deleteDoc(docRef);
+}
+
+export async function setDocById<TInput extends object>(
+  collectionName: string,
+  id: string,
+  input: TInput
+): Promise<HasId & TInput> {
+  const docRef = doc(db, collectionName, id);
+  await setDoc(docRef, input as any, { merge: true });
+  return { id, ...(input as TInput) } as HasId & TInput;
 }

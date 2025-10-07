@@ -6,21 +6,42 @@ import useDeleteQuestion from "@/features/questions/hooks/useDeleteQuestion";
 import QuestionsList from "@/features/questions/components/QuestionsList";
 import CreateQuestionModal from "@/features/questions/components/CreateQuestionModal";
 import UpdateQuestionModal from "@/features/questions/components/UpdateQuestionModal";
+import ViewQuestionModal from "@/features/questions/components/ViewQuestionModal";
 import type { Question } from "@/features/questions/types";
 import {useAppDispatch} from "@/redux/hooks";
-import {showAddQuestion, showUpdateQuestion} from "@/features/questions/slice/questionsSlice";
+import {showAddQuestion, showUpdateQuestion, showViewQuestion} from "@/features/questions/slice/questionsSlice";
+import useListUsers from "@/features/users/hooks/useListUsers";
+import { useFirebaseUser } from "@/hooks/useFirebaseUser";
 
 export default function QuestionsManagementPage() {
   const dispatch = useAppDispatch();
+  const { user } = useFirebaseUser();
+  const currentUserId = user?.uid ?? null;
   const { data: categoriesData } = useListCategories();
   const categoryOptions = useMemo(
     () => (categoriesData || []).map((c) => ({ label: c.name, value: c.id })),
     [categoriesData]
   );
+  const categoryById = useMemo(
+    () => Object.fromEntries((categoriesData || []).map((c) => [c.id, c.name])),
+    [categoriesData]
+  );
+  const { data: usersData } = useListUsers();
+  const authorById = useMemo(
+    () => Object.fromEntries((usersData || []).map((u) => [u.id, { name: u.name ?? '', email: u.email ?? '' }])),
+    [usersData]
+  );
+  const authorDisplayById = useMemo(
+    () => Object.fromEntries(
+      Object.entries(authorById).map(([id, a]) => [id, a.name || a.email || 'Unknown author'])
+    ),
+    [authorById]
+  );
 
   // Filters
   const [filterCategoryIds, setFilterCategoryIds] = useState<string[]>([]);
   const [filterText, setFilterText] = useState<string>("");
+  const [filterAuthor, setFilterAuthor] = useState<string>("");
 
   const deleteMutation = useDeleteQuestion();
   const { data: questions, isLoading: loadingQuestions } = useListQuestions();
@@ -62,6 +83,13 @@ export default function QuestionsManagementPage() {
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
           />
+          <Input.Search
+            allowClear
+            placeholder="Filter by author name/email"
+            style={{ minWidth: 260 }}
+            value={filterAuthor}
+            onChange={(e) => setFilterAuthor(e.target.value)}
+          />
         </Space>
 
         {loadingQuestions ? (
@@ -75,14 +103,26 @@ export default function QuestionsManagementPage() {
               const matchesCategories = filterCategoryIds.length
                 ? q.categoryIds?.some((id) => filterCategoryIds.includes(id))
                 : true;
-              return matchesText && matchesCategories;
+              const matchesAuthor = filterAuthor
+                ? (() => {
+                    const a = authorById[q.authorId];
+                    const term = filterAuthor.toLowerCase();
+                    return a ? (a.name?.toLowerCase().includes(term) || a.email?.toLowerCase().includes(term)) : false;
+                  })()
+                : true;
+              return matchesText && matchesCategories && matchesAuthor;
             })}
             onEdit={(q) => openEdit(q)}
             onDelete={(id) => handleDelete(id)}
+            onView={(q) => dispatch(showViewQuestion(q))}
+            categoryById={categoryById}
+            authorDisplayById={authorDisplayById}
+            currentUserId={currentUserId}
           />
         )}
       </div>
       <UpdateQuestionModal />
+      <ViewQuestionModal />
     </div>
   );
 }

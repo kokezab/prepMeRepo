@@ -5,11 +5,13 @@ import type { RootState } from "@/redux/store";
 export type QuestionsSliceState = {
   isAddQuestionOpen: boolean;
   questionToUpdate: Question | null;
+  questionToView: Question | null;
 };
 
 const initialState: QuestionsSliceState = {
   isAddQuestionOpen: false,
   questionToUpdate: null,
+  questionToView: null,
 };
 
 const questionsSlice = createSlice({
@@ -28,6 +30,12 @@ const questionsSlice = createSlice({
     hideUpdateQuestion(state) {
       state.questionToUpdate = null;
     },
+    showViewQuestion(state, action: PayloadAction<Question>) {
+      state.questionToView = action.payload;
+    },
+    hideViewQuestion(state) {
+      state.questionToView = null;
+    },
   },
 });
 
@@ -36,9 +44,12 @@ export const {
   hideAddQuestion,
   showUpdateQuestion,
   hideUpdateQuestion,
+  showViewQuestion,
+  hideViewQuestion,
 } = questionsSlice.actions;
 
 export default questionsSlice.reducer;
 
 export const selectIsAddQuestionOpen = (state: RootState) => state.questions.isAddQuestionOpen;
 export const selectQuestionToUpdate = (state: RootState) => state.questions.questionToUpdate;
+export const selectQuestionToView = (state: RootState) => state.questions.questionToView;

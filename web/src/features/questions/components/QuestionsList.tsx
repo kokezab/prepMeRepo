@@ -6,9 +6,13 @@ type Props = {
   questions: Question[] | undefined;
   onEdit: (q: Question) => void;
   onDelete: (id: string) => void;
+  onView: (q: Question) => void;
+  categoryById: Record<string, string>;
+  authorDisplayById: Record<string, string>;
+  currentUserId: string | null;
 };
 
-export default function QuestionsList({ questions, onEdit, onDelete }: Props) {
+export default function QuestionsList({ questions, onEdit, onDelete, onView, categoryById, authorDisplayById, currentUserId }: Props) {
   return (
     <List<Question>
       grid={{
@@ -24,7 +28,15 @@ export default function QuestionsList({ questions, onEdit, onDelete }: Props) {
       rowKey={(item) => item.id}
       renderItem={(q) => (
         <List.Item>
-          <QuestionListItem question={q} onEdit={() => onEdit(q)} onDelete={() => onDelete(q.id)} />
+          <QuestionListItem
+            question={q}
+            onEdit={() => onEdit(q)}
+            onDelete={() => onDelete(q.id)}
+            onView={() => onView(q)}
+            categoryById={categoryById}
+            authorDisplayById={authorDisplayById}
+            currentUserId={currentUserId}
+          />
         </List.Item>
       )}
     />
