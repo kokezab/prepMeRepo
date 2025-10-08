@@ -30,8 +30,8 @@ export default function ViewQuestionModal() {
       footer={null}
       width="100%"
       style={{ top: 0, paddingBottom: 0 }}
-      bodyStyle={{ height: "calc(100vh - 110px)", overflow: "auto" }}
-      destroyOnClose
+      styles={{ body: { height: "calc(100vh - 110px)", overflow: "auto" } }}
+      destroyOnHidden
     >
       {question && (
         <div>

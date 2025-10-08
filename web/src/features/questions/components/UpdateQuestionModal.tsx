@@ -60,8 +60,8 @@ export default function UpdateQuestionModal() {
       confirmLoading={isPending}
       width="100%"
       style={{ top: 0, paddingBottom: 0 }}
-      bodyStyle={{ height: "calc(100vh - 110px)", overflow: "auto" }}
-      destroyOnClose
+      styles={{ body: { height: "calc(100vh - 110px)", overflow: "auto" } }}
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" disabled={isPending}>
         <Form.Item label="Question Text" name="text" rules={[{ required: true, message: "Please enter the question" }]}>
