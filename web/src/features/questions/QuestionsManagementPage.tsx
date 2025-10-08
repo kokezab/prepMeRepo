@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+ import { useEffect, useMemo, useState } from "react";
 import { Button, Input, Select, Space, Typography } from "antd";
 import useListCategories from "@/features/categories/hooks/useListCategories";
 import useListQuestions from "@/features/questions/hooks/useListQuestions";
@@ -42,6 +42,24 @@ export default function QuestionsManagementPage() {
   const [filterCategoryIds, setFilterCategoryIds] = useState<string[]>([]);
   const [filterText, setFilterText] = useState<string>("");
   const [filterAuthor, setFilterAuthor] = useState<string>("");
+
+  // Keyboard shortcut: '+' to open Create Question
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      const isEditable = !!target && (target.isContentEditable || !!target.closest('.ant-select'));
+      const isTypingContext = tag === 'input' || tag === 'textarea' || isEditable;
+      if (isTypingContext) return;
+      if (e.key === '+' || (e.key === '=' && e.shiftKey)) {
+        e.preventDefault();
+        dispatch(showAddQuestion());
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [dispatch]);
 
   const deleteMutation = useDeleteQuestion();
   const { data: questions, isLoading: loadingQuestions } = useListQuestions();

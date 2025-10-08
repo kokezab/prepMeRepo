@@ -1,5 +1,5 @@
-import {useMemo, useRef} from "react";
-import {Form, Input, Modal, Select} from "antd";
+ import {useMemo, useRef} from "react";
+ import {Button, Form, Input, Modal, Select} from "antd";
 import type { TextAreaRef } from "antd/es/input/TextArea";
 import useCreateQuestion from "@/features/questions/hooks/useCreateQuestion";
 import useListCategories from "@/features/categories/hooks/useListCategories";
@@ -25,7 +25,7 @@ export default function CreateQuestionModal() {
   const createMutation = useCreateQuestion();
   const createTextRef = useRef<TextAreaRef>(null);
 
-  const handleCreate = async () => {
+  const handleCreate = async (opts?: { keepOpen?: boolean; keepCategories?: boolean }) => {
     try {
       const values = await form.validateFields();
       const normalizeParBreaks = (html: string): string => {
@@ -47,8 +47,15 @@ export default function CreateQuestionModal() {
       };
 
       await createMutation.mutateAsync(payload as any);
-      form.resetFields();
-      dispatch(hideAddQuestion());
+      if (opts?.keepOpen) {
+        const keepCats = opts.keepCategories ? (values.categoryIds as string[]) ?? [] : [];
+        form.setFieldsValue({ text: "", authorsAnswer: "", categoryIds: keepCats });
+        // Refocus textarea for quick entry
+        setTimeout(() => createTextRef.current?.focus?.(), 0);
+      } else {
+        form.resetFields();
+        dispatch(hideAddQuestion());
+      }
     } finally {
       // no-op
     }
@@ -59,14 +66,31 @@ export default function CreateQuestionModal() {
       <Modal
         open={open}
         onCancel={() => dispatch(hideAddQuestion())}
-        onOk={handleCreate}
-        confirmLoading={createMutation.isPending}
         width="100%"
         style={{ top: 0, paddingBottom: 0 }}
         destroyOnClose
         afterOpenChange={(opened) => {
           if (opened) createTextRef.current?.focus?.();
         }}
+        footer={[
+          <Button key="cancel" onClick={() => dispatch(hideAddQuestion())}>Cancel</Button>,
+          <Button
+            key="save-new"
+            type="primary"
+            loading={createMutation.isPending}
+            onClick={() => handleCreate({ keepOpen: true, keepCategories: true })}
+          >
+            Save and create a new one
+          </Button>,
+          <Button
+            key="save"
+            type="primary"
+            loading={createMutation.isPending}
+            onClick={() => handleCreate()}
+          >
+            Save
+          </Button>,
+        ]}
       >
         <Form form={form} layout="vertical" initialValues={{ authorsAnswer: "" }}>
           <Form.Item label="Question Text" name="text" rules={[{ required: true, message: "Please enter the question" }]}>

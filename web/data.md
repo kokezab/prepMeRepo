@@ -11,4 +11,5 @@
 11 TypeScript with React
 12 CSS-in-JS (styled-components, Emotion)
 13 Testing libraries (Jest, React Testing Library)
+14 useTransition, useDeferredValue
 15 GraphQL with React (Apollo Client, Relay)
