@@ -1,5 +1,5 @@
- import { useEffect, useMemo, useState } from "react";
-import { Button, Input, Select, Space, Typography } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Grid, Input, Select, Space, Typography } from "antd";
 import useListCategories from "@/features/categories/hooks/useListCategories";
 import useListQuestions from "@/features/questions/hooks/useListQuestions";
 import useDeleteQuestion from "@/features/questions/hooks/useDeleteQuestion";
@@ -17,6 +17,8 @@ export default function QuestionsManagementPage() {
   const dispatch = useAppDispatch();
   const { user } = useFirebaseUser();
   const currentUserId = user?.uid ?? null;
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.md;
   const { data: categoriesData } = useListCategories();
   const categoryOptions = useMemo(
     () => (categoriesData || []).map((c) => ({ label: c.name, value: c.id })),
@@ -74,7 +76,12 @@ export default function QuestionsManagementPage() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
+      <Space
+        style={{ marginBottom: 16, display: "flex" }}
+        align={isMobile ? 'start' : 'center'}
+        direction={isMobile ? 'vertical' : 'horizontal'}
+        wrap
+      >
         <Typography.Title level={3} style={{ margin: 0 }}>
           Questions Management
         </Typography.Title>
@@ -84,11 +91,11 @@ export default function QuestionsManagementPage() {
 
       <div>
         {/* Filters */}
-        <Space style={{ marginBottom: 16 }} wrap>
+        <Space style={{ marginBottom: 16, width: '100%' }} wrap direction={isMobile ? 'vertical' : 'horizontal'}>
           <Select
             mode="multiple"
             allowClear
-            style={{ minWidth: 260 }}
+            style={{ minWidth: isMobile ? undefined : 260, width: isMobile ? '100%' : undefined }}
             placeholder="Filter by categories"
             options={categoryOptions}
             value={filterCategoryIds}
@@ -97,14 +104,14 @@ export default function QuestionsManagementPage() {
           <Input.Search
             allowClear
             placeholder="Filter by question text"
-            style={{ minWidth: 260 }}
+            style={{ minWidth: isMobile ? undefined : 260, width: isMobile ? '100%' : undefined }}
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
           />
           <Input.Search
             allowClear
             placeholder="Filter by author name/email"
-            style={{ minWidth: 260 }}
+            style={{ minWidth: isMobile ? undefined : 260, width: isMobile ? '100%' : undefined }}
             value={filterAuthor}
             onChange={(e) => setFilterAuthor(e.target.value)}
           />
