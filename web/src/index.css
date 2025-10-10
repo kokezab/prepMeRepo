@@ -51,3 +51,30 @@ body {
 .font-600 {
   font-weight: 600;
 }
+
+/* Google Login Button */
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #fff;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.google-login-btn:hover {
+  background-color: #f7f7f7;
+}
+
+.google-login-btn img {
+  width: 20px;
+  height: 20px;
+}

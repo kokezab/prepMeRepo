@@ -2,6 +2,7 @@ import { Button, Typography, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
+import GoogleLoginButton from "@/components/GoogleLoginButton.tsx";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -20,9 +21,9 @@ export default function Login() {
     <div className="center-100vh">
       <div className="text-center">
         <Typography.Title level={2}>Login</Typography.Title>
-        <Button type="primary" size="large" onClick={handleLogin}>
+        <GoogleLoginButton onClick={handleLogin}>
           Continue with Google
-        </Button>
+        </GoogleLoginButton>
       </div>
     </div>
   );
