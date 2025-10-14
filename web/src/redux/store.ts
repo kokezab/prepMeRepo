@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import categories from "../features/categories/slice/categoriesSlice.ts";
+import questions from "../features/questions/slice/questionsSlice.ts";
 import ui from "./uiSlice";
 
 export const store = configureStore({
     reducer: {
         categories,
+        questions,
         ui,
     },
 })

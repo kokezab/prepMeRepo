@@ -78,3 +78,16 @@ body {
   width: 20px;
   height: 20px;
 }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .p-24 {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .p-24 {
+    padding: 12px;
+  }
+}

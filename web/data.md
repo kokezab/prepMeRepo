@@ -12,4 +12,5 @@
 12 CSS-in-JS (styled-components, Emotion)
 13 Testing libraries (Jest, React Testing Library)
 14 Why useRef returns object with current property
-15 GraphQL with React (Apollo Client, Relay)
+15 useTransition, useDeferredValue
+16 GraphQL with React (Apollo Client, Relay)

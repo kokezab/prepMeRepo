@@ -82,7 +82,7 @@ export default function AppLayout() {
         placement="left"
         open={open}
         onClose={() => setOpen(false)}
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }}
       >
         <Menu
           mode="inline"

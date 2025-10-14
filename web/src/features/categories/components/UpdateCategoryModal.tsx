@@ -60,7 +60,7 @@ export default function UpdateCategoryModal() {
                     disabled={isPending}
                 >
                     <Form.Item name="name" rules={nameRules}>
-                        <Input placeholder="Enter category name"/>
+                        <Input placeholder="Enter category name" autoFocus/>
                     </Form.Item>
                 </Form>
             </Modal>
