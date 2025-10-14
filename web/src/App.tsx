@@ -13,20 +13,30 @@ export default function App() {
     <>
       <GlobalMessageHost />
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/guest" element={<Guest />} />
+        {/* Root is guest entry */}
+        <Route path="/" element={<Guest />} />
 
+        {/* Guest-accessible Questions under root */}
         <Route element={<RequireAuth />}>
           <Route element={<AppLayout />}>
-            <Route element={<RequireNonGuest />}>
-              <Route path="/categories" element={<Categories />} />
-            </Route>
             <Route path="/questions" element={<Questions />} />
           </Route>
         </Route>
 
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Authenticated app under /auth */}
+        <Route path="/auth">
+          <Route path="login" element={<Login />} />
+          <Route element={<RequireNonGuest />}>
+            <Route element={<RequireAuth />}>
+              <Route element={<AppLayout />}>
+                <Route path="categories" element={<Categories />} />
+                <Route path="questions" element={<Questions />} />
+              </Route>
+            </Route>
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

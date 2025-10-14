@@ -17,7 +17,7 @@ export default function RequireAuth() {
   }
 
   if (!user && !guestMode) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
   return <Outlet />;

@@ -22,18 +22,20 @@ export default function AppLayout() {
   const isMobile = useMemo(() => !screens.md, [screens]);
   const [open, setOpen] = useState(false);
   const items = useMemo(() => {
-    const base = [
+    const inAuth = location.pathname.startsWith('/auth');
+    const base = inAuth ? '/auth' : '';
+    const baseItems = [
       !guestMode && {
-        key: '/categories',
-        label: <Link to="/categories">Categories</Link>,
+        key: `${base}/categories`,
+        label: <Link to={`${base}/categories`}>Categories</Link>,
       },
       {
-        key: '/questions',
-        label: <Link to="/questions">Questions</Link>,
+        key: `${base}/questions`,
+        label: <Link to={`${base}/questions`}>Questions</Link>,
       },
     ].filter(Boolean) as { key: string; label: ReactNode }[];
-    return base;
-  }, [guestMode]);
+    return baseItems;
+  }, [guestMode, location.pathname]);
   const selectedKeys = items
     .map((i) => i.key)
     .filter((k) => location.pathname.startsWith(k));
@@ -69,7 +71,7 @@ export default function AppLayout() {
                 size="small"
                 onClick={async () => {
                   await signOut(auth);
-                  navigate('/login', { replace: true });
+                  navigate('/auth/login', { replace: true });
                 }}
               >
                 Sign out

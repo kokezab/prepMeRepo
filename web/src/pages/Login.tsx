@@ -26,7 +26,7 @@ export default function Login() {
       }
       // Ensure we leave guest mode after real login
       dispatch(disableGuestMode());
-      navigate('/categories', { replace: true });
+      navigate('/auth/categories', { replace: true });
     } catch (err: any) {
       // Show a friendly message
       message.error(err?.message ?? 'Google sign-in failed');
