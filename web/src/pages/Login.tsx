@@ -6,9 +6,12 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
 import GoogleLoginButton from "@/components/GoogleLoginButton.tsx";
 import { upsertUser } from '@/features/users/api/usersApi';
+import { useAppDispatch } from '@/redux/hooks';
+import { disableGuestMode } from '@/redux/uiSlice';
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleLogin = async () => {
     try {
@@ -21,6 +24,8 @@ export default function Login() {
           photoURL: u.photoURL ?? null,
         });
       }
+      // Ensure we leave guest mode after real login
+      dispatch(disableGuestMode());
       navigate('/categories', { replace: true });
     } catch (err: any) {
       // Show a friendly message

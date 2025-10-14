@@ -3,21 +3,11 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useFirebaseUser } from '@/hooks/useFirebaseUser';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { MenuOutlined } from '@ant-design/icons';
+import { useAppSelector } from '@/redux/hooks';
 
 const { Header, Content } = Layout;
-
-const items = [
-  {
-    key: '/categories',
-    label: <Link to="/categories">Categories</Link>,
-  },
-  {
-    key: '/questions',
-    label: <Link to="/questions">Questions</Link>,
-  },
-];
 
 export default function AppLayout() {
   const {
@@ -27,12 +17,27 @@ export default function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useFirebaseUser();
+  const guestMode = useAppSelector((s) => s.ui.guestMode);
   const screens = Grid.useBreakpoint();
   const isMobile = useMemo(() => !screens.md, [screens]);
   const [open, setOpen] = useState(false);
+  const items = useMemo(() => {
+    const base = [
+      !guestMode && {
+        key: '/categories',
+        label: <Link to="/categories">Categories</Link>,
+      },
+      {
+        key: '/questions',
+        label: <Link to="/questions">Questions</Link>,
+      },
+    ].filter(Boolean) as { key: string; label: ReactNode }[];
+    return base;
+  }, [guestMode]);
   const selectedKeys = items
     .map((i) => i.key)
     .filter((k) => location.pathname.startsWith(k));
+  const fallbackKey = items.length ? [items[0].key] : [];
 
   return (
     <Layout className="min-h-100vh">
@@ -42,7 +47,7 @@ export default function AppLayout() {
           {!isMobile && (
             <Menu
               mode="horizontal"
-              selectedKeys={selectedKeys.length ? selectedKeys : ['/categories']}
+              selectedKeys={selectedKeys.length ? selectedKeys : fallbackKey}
               items={items}
             />
           )}
@@ -86,7 +91,7 @@ export default function AppLayout() {
       >
         <Menu
           mode="inline"
-          selectedKeys={selectedKeys.length ? selectedKeys : ['/categories']}
+          selectedKeys={selectedKeys.length ? selectedKeys : fallbackKey}
           items={items}
           onClick={() => setOpen(false)}
         />

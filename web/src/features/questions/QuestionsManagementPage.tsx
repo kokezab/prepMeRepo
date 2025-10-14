@@ -12,10 +12,12 @@ import {useAppDispatch} from "@/redux/hooks";
 import {showAddQuestion, showUpdateQuestion, showViewQuestion} from "@/features/questions/slice/questionsSlice";
 import useListUsers from "@/features/users/hooks/useListUsers";
 import { useFirebaseUser } from "@/hooks/useFirebaseUser";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function QuestionsManagementPage() {
   const dispatch = useAppDispatch();
   const { user } = useFirebaseUser();
+  const guestMode = useAppSelector((s) => s.ui.guestMode);
   const currentUserId = user?.uid ?? null;
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.md;
@@ -54,23 +56,25 @@ export default function QuestionsManagementPage() {
       const isEditable = !!target && (target.isContentEditable || !!target.closest('.ant-select'));
       const isTypingContext = tag === 'input' || tag === 'textarea' || isEditable;
       if (isTypingContext) return;
-      if (e.key === '+' || (e.key === '=' && e.shiftKey)) {
+      if (!guestMode && (e.key === '+' || (e.key === '=' && e.shiftKey))) {
         e.preventDefault();
         dispatch(showAddQuestion());
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [dispatch]);
+  }, [dispatch, guestMode]);
 
   const deleteMutation = useDeleteQuestion();
   const { data: questions, isLoading: loadingQuestions } = useListQuestions();
 
   const openEdit = (q: { id: string; text: string; categoryIds: string[]; authorsAnswer: string | null }) => {
+    if (guestMode) return;
     dispatch(showUpdateQuestion(q as Question));
   };
 
   const handleDelete = (id: string) => {
+    if (guestMode) return;
     deleteMutation.mutate(id);
   };
 
@@ -85,7 +89,9 @@ export default function QuestionsManagementPage() {
         <Typography.Title level={3} style={{ margin: 0 }}>
           Questions Management
         </Typography.Title>
-        <Button type="primary" onClick={() => dispatch(showAddQuestion())}>Create Question</Button>
+        {!guestMode && (
+          <Button type="primary" onClick={() => dispatch(showAddQuestion())}>Create Question</Button>
+        )}
         <CreateQuestionModal />
       </Space>
 
@@ -143,6 +149,7 @@ export default function QuestionsManagementPage() {
             categoryById={categoryById}
             authorDisplayById={authorDisplayById}
             currentUserId={currentUserId}
+            guestMode={guestMode}
           />
         )}
       </div>

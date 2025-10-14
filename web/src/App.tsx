@@ -5,6 +5,8 @@ import Login from "@/pages/Login";
 import Questions from "@/pages/Questions";
 import Categories from "@/pages/Categories.tsx";
 import RequireAuth from "@/components/RequireAuth";
+import Guest from "@/pages/Guest";
+import RequireNonGuest from "@/components/RequireNonGuest";
 
 export default function App() {
   return (
@@ -12,10 +14,13 @@ export default function App() {
       <GlobalMessageHost />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/guest" element={<Guest />} />
 
         <Route element={<RequireAuth />}>
           <Route element={<AppLayout />}>
-            <Route path="/categories" element={<Categories />} />
+            <Route element={<RequireNonGuest />}>
+              <Route path="/categories" element={<Categories />} />
+            </Route>
             <Route path="/questions" element={<Questions />} />
           </Route>
         </Route>

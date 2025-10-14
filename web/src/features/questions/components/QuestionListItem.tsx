@@ -10,10 +10,11 @@ type Props = {
   categoryById: Record<string, string>;
   authorDisplayById: Record<string, string>;
   currentUserId: string | null;
+  guestMode?: boolean;
 };
 
-export default function QuestionListItem({ question, onEdit, onDelete, onView, categoryById, authorDisplayById, currentUserId }: Props) {
-  const canModify = currentUserId != null && currentUserId === question.authorId;
+export default function QuestionListItem({ question, onEdit, onDelete, onView, categoryById, authorDisplayById, currentUserId, guestMode }: Props) {
+  const canModify = !guestMode && currentUserId != null && currentUserId === question.authorId;
   return (
     <Card size="small" onClick={onView} hoverable>
       <Flex justify="space-between" align="center" wrap gap={8}>

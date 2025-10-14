@@ -8,10 +8,12 @@ export type UiMessage = {
 
 export type UiState = {
   messageQueue: UiMessage[];
+  guestMode: boolean;
 };
 
 const initialState: UiState = {
   messageQueue: [],
+  guestMode: false,
 };
 
 const uiSlice = createSlice({
@@ -27,8 +29,14 @@ const uiSlice = createSlice({
     clearMessages(state) {
       state.messageQueue = [];
     },
+    enableGuestMode(state) {
+      state.guestMode = true;
+    },
+    disableGuestMode(state) {
+      state.guestMode = false;
+    },
   },
 });
 
-export const { enqueueMessage, dequeueMessage, clearMessages } = uiSlice.actions;
+export const { enqueueMessage, dequeueMessage, clearMessages, enableGuestMode, disableGuestMode } = uiSlice.actions;
 export default uiSlice.reducer;

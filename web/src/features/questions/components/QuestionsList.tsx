@@ -10,9 +10,10 @@ type Props = {
   categoryById: Record<string, string>;
   authorDisplayById: Record<string, string>;
   currentUserId: string | null;
+  guestMode?: boolean;
 };
 
-export default function QuestionsList({ questions, onEdit, onDelete, onView, categoryById, authorDisplayById, currentUserId }: Props) {
+export default function QuestionsList({ questions, onEdit, onDelete, onView, categoryById, authorDisplayById, currentUserId, guestMode }: Props) {
   return (
     <List<Question>
       grid={{
@@ -36,6 +37,7 @@ export default function QuestionsList({ questions, onEdit, onDelete, onView, cat
             categoryById={categoryById}
             authorDisplayById={authorDisplayById}
             currentUserId={currentUserId}
+            guestMode={guestMode}
           />
         </List.Item>
       )}
