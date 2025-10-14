@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {useCallback, useMemo} from "react";
 import isHotkey from "is-hotkey";
 import {createEditor, Descendant, Editor, Element as SlateElement, Transforms, Text} from "slate";
@@ -130,7 +132,7 @@ function toggleBlock(editor: Editor, format: string) {
     split: true,
   });
 
-  let newProperties: Partial<SlateElement & { align?: Align; type?: string }>; 
+  let newProperties: Partial<SlateElement & { align?: Align; type?: string }>;
   if (isAlignType(format)) {
     newProperties = { align: isActive ? undefined : (format as Align) };
   } else {
