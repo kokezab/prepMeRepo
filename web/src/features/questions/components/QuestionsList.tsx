@@ -7,13 +7,15 @@ type Props = {
   onEdit: (q: Question) => void;
   onDelete: (id: string) => void;
   onView: (q: Question) => void;
+  onToggleCompleted: (q: Question) => void;
+  onQuickViewAnswer: (q: Question) => void;
   categoryById: Record<string, string>;
   authorDisplayById: Record<string, string>;
   currentUserId: string | null;
   guestMode?: boolean;
 };
 
-export default function QuestionsList({ questions, onEdit, onDelete, onView, categoryById, authorDisplayById, currentUserId, guestMode }: Props) {
+export default function QuestionsList({ questions, onEdit, onDelete, onView, onToggleCompleted, onQuickViewAnswer, categoryById, authorDisplayById, currentUserId, guestMode }: Props) {
   return (
     <List<Question>
       grid={{
@@ -34,6 +36,8 @@ export default function QuestionsList({ questions, onEdit, onDelete, onView, cat
             onEdit={() => onEdit(q)}
             onDelete={() => onDelete(q.id)}
             onView={() => onView(q)}
+            onToggleCompleted={() => onToggleCompleted(q)}
+            onQuickViewAnswer={() => onQuickViewAnswer(q)}
             categoryById={categoryById}
             authorDisplayById={authorDisplayById}
             currentUserId={currentUserId}

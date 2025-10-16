@@ -3,10 +3,12 @@ import { Button, Grid, Input, Select, Space, Typography } from "antd";
 import useListCategories from "@/features/categories/hooks/useListCategories";
 import useListQuestions from "@/features/questions/hooks/useListQuestions";
 import useDeleteQuestion from "@/features/questions/hooks/useDeleteQuestion";
+import useUpdateQuestion from "@/features/questions/hooks/useUpdateQuestion";
 import QuestionsList from "@/features/questions/components/QuestionsList";
 import CreateQuestionModal from "@/features/questions/components/CreateQuestionModal";
 import UpdateQuestionModal from "@/features/questions/components/UpdateQuestionModal";
 import ViewQuestionModal from "@/features/questions/components/ViewQuestionModal";
+import AuthorsAnswerDrawer from "@/features/questions/components/AuthorsAnswerDrawer";
 import type { Question } from "@/features/questions/types";
 import {useAppDispatch} from "@/redux/hooks";
 import {showAddQuestion, showUpdateQuestion, showViewQuestion} from "@/features/questions/slice/questionsSlice";
@@ -46,6 +48,10 @@ export default function QuestionsManagementPage() {
   const [filterCategoryIds, setFilterCategoryIds] = useState<string[]>([]);
   const [filterText, setFilterText] = useState<string>("");
   const [filterAuthor, setFilterAuthor] = useState<string>("");
+  const [filterCompleted, setFilterCompleted] = useState<string>(""); // "all", "completed", "not-completed"
+
+  // Drawer state
+  const [drawerQuestion, setDrawerQuestion] = useState<Question | null>(null);
 
   // Keyboard shortcut: '+' to open Create Question
   useEffect(() => {
@@ -66,6 +72,7 @@ export default function QuestionsManagementPage() {
   }, [dispatch, guestMode]);
 
   const deleteMutation = useDeleteQuestion();
+  const updateMutation = useUpdateQuestion();
   const { data: questions, isLoading: loadingQuestions } = useListQuestions();
 
   const openEdit = (q: { id: string; text: string; categoryIds: string[]; authorsAnswer: string | null }) => {
@@ -76,6 +83,20 @@ export default function QuestionsManagementPage() {
   const handleDelete = (id: string) => {
     if (guestMode) return;
     deleteMutation.mutate(id);
+  };
+
+  const handleToggleCompleted = (q: Question) => {
+    if (guestMode || !currentUserId) return;
+    const completedBy = q.completedBy || [];
+    const isCompleted = completedBy.includes(currentUserId);
+    const updatedCompletedBy = isCompleted
+      ? completedBy.filter(id => id !== currentUserId)
+      : [...completedBy, currentUserId];
+    updateMutation.mutate({ id: q.id, patch: { completedBy: updatedCompletedBy } });
+  };
+
+  const handleQuickViewAnswer = (q: Question) => {
+    setDrawerQuestion(q);
   };
 
   return (
@@ -121,6 +142,18 @@ export default function QuestionsManagementPage() {
             value={filterAuthor}
             onChange={(e) => setFilterAuthor(e.target.value)}
           />
+          <Select
+            allowClear
+            style={{ minWidth: isMobile ? undefined : 200, width: isMobile ? '100%' : undefined }}
+            placeholder="Filter by completion status"
+            options={[
+              { label: "All", value: "all" },
+              { label: "Completed", value: "completed" },
+              { label: "Not Completed", value: "not-completed" },
+            ]}
+            value={filterCompleted || undefined}
+            onChange={(val) => setFilterCompleted(val || "")}
+          />
         </Space>
 
         {loadingQuestions ? (
@@ -141,11 +174,21 @@ export default function QuestionsManagementPage() {
                     return a ? (a.name?.toLowerCase().includes(term) || a.email?.toLowerCase().includes(term)) : false;
                   })()
                 : true;
-              return matchesText && matchesCategories && matchesAuthor;
+              const matchesCompleted = filterCompleted
+                ? (() => {
+                    const isCompleted = currentUserId ? q.completedBy?.includes(currentUserId) : false;
+                    if (filterCompleted === "completed") return isCompleted;
+                    if (filterCompleted === "not-completed") return !isCompleted;
+                    return true; // "all"
+                  })()
+                : true;
+              return matchesText && matchesCategories && matchesAuthor && matchesCompleted;
             })}
             onEdit={(q) => openEdit(q)}
             onDelete={(id) => handleDelete(id)}
             onView={(q) => dispatch(showViewQuestion(q))}
+            onToggleCompleted={(q) => handleToggleCompleted(q)}
+            onQuickViewAnswer={(q) => handleQuickViewAnswer(q)}
             categoryById={categoryById}
             authorDisplayById={authorDisplayById}
             currentUserId={currentUserId}
@@ -155,6 +198,13 @@ export default function QuestionsManagementPage() {
       </div>
       <UpdateQuestionModal />
       <ViewQuestionModal />
+      <AuthorsAnswerDrawer 
+        question={drawerQuestion}
+        open={!!drawerQuestion}
+        onClose={() => setDrawerQuestion(null)}
+        categoryById={categoryById}
+        authorDisplayById={authorDisplayById}
+      />
     </div>
   );
 }
