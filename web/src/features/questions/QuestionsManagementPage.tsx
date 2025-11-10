@@ -108,7 +108,7 @@ export default function QuestionsManagementPage() {
         wrap
       >
         <Typography.Title level={3} style={{ margin: 0 }}>
-          Questions Management
+          Questions
         </Typography.Title>
         {!guestMode && (
           <Button type="primary" onClick={() => dispatch(showAddQuestion())}>Create Question</Button>
