@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { hideViewQuestion, selectQuestionToView } from "@/features/questions/slice/questionsSlice";
 import useListCategories from "@/features/categories/hooks/useListCategories";
 import useListUsers from "@/features/users/hooks/useListUsers";
+import { getColorFromString } from "@/lib/colors";
 
 export default function ViewQuestionModal() {
   const dispatch = useAppDispatch();
@@ -26,7 +27,17 @@ export default function ViewQuestionModal() {
     <Modal
       open={open}
       onCancel={() => dispatch(hideViewQuestion())}
-      title="Question Details"
+      title={
+        <span style={{
+          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontSize: '20px',
+          fontWeight: 600
+        }}>
+          Question Details
+        </span>
+      }
       footer={null}
       width="100%"
       style={{ top: 0, paddingBottom: 0 }}
@@ -35,28 +46,64 @@ export default function ViewQuestionModal() {
     >
       {question && (
         <div>
-          <Typography.Title level={5} style={{ marginTop: 0 }}>Question</Typography.Title>
-          <Typography.Paragraph style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+          <Typography.Title level={5} style={{ marginTop: 0, color: '#6366f1' }}>Question</Typography.Title>
+          <Typography.Paragraph
+            style={{
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              background: 'linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%)',
+              padding: 16,
+              borderRadius: 8,
+              fontSize: '15px',
+              fontWeight: 500,
+              borderLeft: '4px solid #6366f1'
+            }}
+          >
             {question.text}
           </Typography.Paragraph>
 
-          <Typography.Title level={5}>Categories</Typography.Title>
-          <Space size={[4, 4]} wrap>
+          <Typography.Title level={5} style={{ color: '#8b5cf6' }}>Categories</Typography.Title>
+          <Space size={[6, 6]} wrap style={{ marginBottom: 16 }}>
             {(question.categoryIds || [])
               .map((id) => ({ id, name: categoryById[id] }))
               .filter((c) => !!c.name)
-              .map((c) => (
-                <Tag key={c.id}>{c.name}</Tag>
-              ))}
+              .map((c) => {
+                const color = getColorFromString(c.name);
+                return (
+                  <Tag
+                    key={c.id}
+                    style={{
+                      background: color.bg,
+                      borderColor: color.border,
+                      color: color.text,
+                      fontWeight: 500,
+                      padding: '4px 12px',
+                      borderRadius: '6px',
+                      border: `1.5px solid ${color.border}`,
+                      fontSize: '14px'
+                    }}
+                  >
+                    {c.name}
+                  </Tag>
+                );
+              })}
           </Space>
 
-          <Typography.Title level={5} style={{ marginTop: 16 }}>Author</Typography.Title>
-          <Typography.Text>{authorDisplayById[question.authorId] || 'Unknown author'}</Typography.Text>
+          <Typography.Title level={5} style={{ marginTop: 16, color: '#3b82f6' }}>Author</Typography.Title>
+          <Typography.Text style={{ fontStyle: 'italic', color: '#6366f1' }}>
+            {authorDisplayById[question.authorId] || 'Unknown author'}
+          </Typography.Text>
 
-          <Typography.Title level={5} style={{ marginTop: 16 }}>Author's Answer</Typography.Title>
+          <Typography.Title level={5} style={{ marginTop: 16, color: '#10b981' }}>Author's Answer</Typography.Title>
           {question.authorsAnswer ? (
             <div
-              style={{ border: '1px solid #f0f0f0', borderRadius: 6, padding: 12 }}
+              style={{
+                border: '2px solid #e5e7eb',
+                borderRadius: 8,
+                padding: 16,
+                background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+              }}
               dangerouslySetInnerHTML={{ __html: question.authorsAnswer }}
             />
           ) : (

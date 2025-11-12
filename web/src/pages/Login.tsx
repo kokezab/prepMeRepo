@@ -34,9 +34,47 @@ export default function Login() {
   };
 
   return (
-    <div className="center-100vh">
-      <div className="text-center">
-        <Typography.Title level={2}>Login</Typography.Title>
+    <div
+      className="center-100vh animated-gradient"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <div
+        className="text-center glass fade-in"
+        style={{
+          padding: '48px',
+          borderRadius: '16px',
+          boxShadow: '0 8px 32px rgba(99, 102, 241, 0.3)',
+          maxWidth: '400px',
+          width: '90%'
+        }}
+      >
+        <Typography.Title
+          level={2}
+          style={{
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontSize: '36px',
+            fontWeight: 700,
+            marginBottom: '8px'
+          }}
+        >
+          Welcome to PrepMe
+        </Typography.Title>
+        <Typography.Paragraph
+          style={{
+            color: '#4b5563',
+            fontSize: '16px',
+            marginBottom: '32px'
+          }}
+        >
+          Sign in to continue learning
+        </Typography.Paragraph>
         <GoogleLoginButton onClick={handleLogin}>
           Continue with Google
         </GoogleLoginButton>
