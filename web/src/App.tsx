@@ -4,6 +4,7 @@ import AppLayout from "@/components/AppLayout";
 import Login from "@/pages/Login";
 import Questions from "@/pages/Questions";
 import Categories from "@/pages/Categories.tsx";
+import MockInterview from "@/pages/MockInterview.tsx";
 import RequireAuth from "@/components/RequireAuth";
 import Guest from "@/pages/Guest";
 import RequireNonGuest from "@/components/RequireNonGuest";
@@ -20,6 +21,7 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route element={<AppLayout />}>
             <Route path="/questions" element={<Questions />} />
+            <Route path="/mock-interview" element={<MockInterview />} />
           </Route>
         </Route>
 
@@ -31,6 +33,7 @@ export default function App() {
               <Route element={<AppLayout />}>
                 <Route path="categories" element={<Categories />} />
                 <Route path="questions" element={<Questions />} />
+                <Route path="mock-interview" element={<MockInterview />} />
               </Route>
             </Route>
           </Route>
