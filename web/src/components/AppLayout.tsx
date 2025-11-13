@@ -1,4 +1,4 @@
-import { Layout, Menu, theme, Button, Space, Typography, Drawer, Grid } from 'antd';
+import { Layout, Menu, Button, Space, Typography, Drawer, Grid } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useFirebaseUser } from '@/hooks/useFirebaseUser';
 import { signOut } from 'firebase/auth';
@@ -10,10 +10,6 @@ import { useAppSelector } from '@/redux/hooks';
 const { Header, Content } = Layout;
 
 export default function AppLayout() {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useFirebaseUser();
@@ -47,14 +43,27 @@ export default function AppLayout() {
 
   return (
     <Layout className="min-h-100vh">
-      <Header style={{ background: colorBgContainer }} className="flex items-center justify-between">
+      <Header
+        className="flex items-center justify-between header-gradient"
+        style={{
+          padding: '0 24px',
+        }}
+      >
         <div className="flex items-center">
-          <div className="font-600 mr-24">PrepMe</div>
+          <div className="font-600 mr-24" style={{ fontSize: '20px', color: '#fff', letterSpacing: '0.5px' }}>
+            PrepMe
+          </div>
           {!isMobile && (
             <Menu
               mode="horizontal"
               selectedKeys={selectedKeys.length ? selectedKeys : fallbackKey}
               items={items}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#fff',
+              }}
+              theme="dark"
             />
           )}
         </div>
@@ -65,9 +74,10 @@ export default function AppLayout() {
                 icon={<MenuOutlined />}
                 onClick={() => setOpen(true)}
                 aria-label="Open menu"
+                style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff' }}
               />
             )}
-            <Typography.Text>
+            <Typography.Text style={{ color: '#fff', fontWeight: 500 }}>
               {user ? (user.displayName || user.email || 'Signed in') : ''}
             </Typography.Text>
             {user && (
@@ -76,6 +86,12 @@ export default function AppLayout() {
                 onClick={async () => {
                   await signOut(auth);
                   navigate('/auth/login', { replace: true });
+                }}
+                style={{
+                  background: 'rgba(255,255,255,0.2)',
+                  border: 'none',
+                  color: '#fff',
+                  fontWeight: 500,
                 }}
               >
                 Sign out
