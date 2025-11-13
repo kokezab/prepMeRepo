@@ -1,14 +1,16 @@
 import {Category} from "@/features/categories/types.ts";
-import {Button, Card, Flex, Popconfirm, Space} from "antd";
-import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import {Button, Card, Flex, Popconfirm, Space, Typography} from "antd";
+import {EditOutlined, DeleteOutlined, TagOutlined} from "@ant-design/icons";
 import {useAppDispatch} from "@/redux/hooks.ts";
 import {showUpdateCategory} from "@/features/categories/slice/categoriesSlice.ts";
 import useDeleteCategory from "@/features/categories/hooks/useDeleteCategory";
+import { getColorFromString } from "@/lib/colors";
 
 export default function CategoryListItem({category}: { category: Category }) {
 
     const dispatch = useAppDispatch();
     const {mutate: deleteCategory, isPending} = useDeleteCategory();
+    const color = getColorFromString(category.name);
 
     const onEdit = () => {
         dispatch(showUpdateCategory(category));
@@ -18,23 +20,44 @@ export default function CategoryListItem({category}: { category: Category }) {
         deleteCategory(category.id);
     }
 
-    return <Card size='small'><Flex justify='space-between' align='center'>
-        <span>{category.name}</span>
+    return (
+        <Card
+            size='small'
+            className="card-hover fade-in"
+            style={{
+                borderLeft: `4px solid ${color.border}`,
+                background: `linear-gradient(135deg, ${color.bg} 0%, #ffffff 100%)`,
+            }}
+        >
+            <Flex justify='space-between' align='center'>
+                <Space>
+                    <TagOutlined style={{ color: color.border, fontSize: '18px' }} />
+                    <Typography.Text strong style={{ fontSize: '15px', color: color.text }}>
+                        {category.name}
+                    </Typography.Text>
+                </Space>
 
-        <Space>
-            <Button onClick={onEdit} icon={<EditOutlined/>} type="text" disabled={isPending}/>
-            <Popconfirm
-                title="Delete category"
-                description={`Are you sure you want to delete "${category.name}"?`}
-                okText="Delete"
-                okButtonProps={{danger: true, loading: isPending}}
-                cancelText="Cancel"
-                onConfirm={onConfirmDelete}
-                disabled={isPending}
-            >
-                <Button icon={<DeleteOutlined/>} type="text" danger disabled={isPending}/>
-            </Popconfirm>
-        </Space>
-    </Flex>
-    </Card>;
+                <Space>
+                    <Button
+                        onClick={onEdit}
+                        icon={<EditOutlined/>}
+                        type="text"
+                        disabled={isPending}
+                        style={{ color: '#8b5cf6' }}
+                    />
+                    <Popconfirm
+                        title="Delete category"
+                        description={`Are you sure you want to delete "${category.name}"?`}
+                        okText="Delete"
+                        okButtonProps={{danger: true, loading: isPending}}
+                        cancelText="Cancel"
+                        onConfirm={onConfirmDelete}
+                        disabled={isPending}
+                    >
+                        <Button icon={<DeleteOutlined/>} type="text" danger disabled={isPending}/>
+                    </Popconfirm>
+                </Space>
+            </Flex>
+        </Card>
+    );
 }
