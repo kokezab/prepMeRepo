@@ -33,6 +33,10 @@ export default function AppLayout() {
         key: `${base}/questions`,
         label: <Link to={`${base}/questions`}>Questions</Link>,
       },
+      {
+        key: `${base}/mock-interview`,
+        label: <Link to={`${base}/mock-interview`}>Mock Interview</Link>,
+      },
     ].filter(Boolean) as { key: string; label: ReactNode }[];
     return baseItems;
   }, [guestMode, location.pathname]);
