@@ -1,7 +1,7 @@
 import {Category} from "@/features/categories/types.ts";
 import {Button, Card, Flex, Popconfirm, Space, Typography} from "antd";
 import {EditOutlined, DeleteOutlined, TagOutlined} from "@ant-design/icons";
-import {useAppDispatch} from "@/redux/hooks.ts";
+import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
 import {showUpdateCategory} from "@/features/categories/slice/categoriesSlice.ts";
 import useDeleteCategory from "@/features/categories/hooks/useDeleteCategory";
 import { getColorFromString } from "@/lib/colors";
@@ -9,8 +9,9 @@ import { getColorFromString } from "@/lib/colors";
 export default function CategoryListItem({category}: { category: Category }) {
 
     const dispatch = useAppDispatch();
+    const darkMode = useAppSelector((s) => s.ui.darkMode);
     const {mutate: deleteCategory, isPending} = useDeleteCategory();
-    const color = getColorFromString(category.name);
+    const color = getColorFromString(category.name, darkMode);
 
     const onEdit = () => {
         dispatch(showUpdateCategory(category));
@@ -20,13 +21,18 @@ export default function CategoryListItem({category}: { category: Category }) {
         deleteCategory(category.id);
     }
 
+    // Dark mode aware background
+    const bgGradient = darkMode
+        ? `linear-gradient(135deg, ${color.bg} 0%, #1f2937 100%)`
+        : `linear-gradient(135deg, ${color.bg} 0%, #ffffff 100%)`;
+
     return (
         <Card
             size='small'
             className="card-hover fade-in"
             style={{
                 borderLeft: `4px solid ${color.border}`,
-                background: `linear-gradient(135deg, ${color.bg} 0%, #ffffff 100%)`,
+                background: bgGradient,
             }}
         >
             <Flex justify='space-between' align='center'>

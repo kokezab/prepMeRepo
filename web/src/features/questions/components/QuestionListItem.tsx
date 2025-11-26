@@ -2,6 +2,7 @@ import { Button, Card, Flex, Popconfirm, Space, Typography, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, CheckCircleOutlined, CheckCircleFilled, FileTextOutlined } from "@ant-design/icons";
 import type { Question } from "@/features/questions/types";
 import { getColorFromString } from "@/lib/colors";
+import { useAppSelector } from "@/redux/hooks";
 
 type Props = {
   question: Question;
@@ -17,9 +18,10 @@ type Props = {
 };
 
 export default function QuestionListItem({ question, onEdit, onDelete, onView, onToggleCompleted, onQuickViewAnswer, categoryById, authorDisplayById, currentUserId, guestMode }: Props) {
+  const darkMode = useAppSelector((s) => s.ui.darkMode);
   const canModify = !guestMode && currentUserId != null && currentUserId === question.authorId;
   const isCompleted = currentUserId ? question.completedBy?.includes(currentUserId) : false;
-  
+
   // Open drawer on card click if answer exists, otherwise open modal
   const handleCardClick = () => {
     if (question.authorsAnswer) {
@@ -28,17 +30,25 @@ export default function QuestionListItem({ question, onEdit, onDelete, onView, o
       onView();
     }
   };
-  
+
+  // Dark mode aware colors
+  const completedBorderColor = darkMode ? '#34d399' : '#10b981';
+  const defaultBorderColor = darkMode ? '#818cf8' : '#6366f1';
+  const completedBgGradient = darkMode
+    ? 'linear-gradient(135deg, #1f2937 0%, #065f46 100%)'
+    : 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)';
+  const defaultBgGradient = darkMode
+    ? 'linear-gradient(135deg, #1f2937 0%, #374151 100%)'
+    : 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)';
+
   return (
     <Card
       size="small"
       onClick={handleCardClick}
       className="card-hover fade-in"
       style={{
-        borderLeft: isCompleted ? '4px solid #10b981' : '4px solid #6366f1',
-        background: isCompleted
-          ? 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)'
-          : 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)',
+        borderLeft: isCompleted ? `4px solid ${completedBorderColor}` : `4px solid ${defaultBorderColor}`,
+        background: isCompleted ? completedBgGradient : defaultBgGradient,
       }}
     >
       <Flex justify="space-between" align="center" wrap gap={8}>
@@ -51,7 +61,7 @@ export default function QuestionListItem({ question, onEdit, onDelete, onView, o
               .map((id) => ({ id, name: categoryById[id] }))
               .filter((c) => !!c.name)
               .map((c) => {
-                const color = getColorFromString(c.name);
+                const color = getColorFromString(c.name, darkMode);
                 return (
                   <Tag
                     key={c.id}
