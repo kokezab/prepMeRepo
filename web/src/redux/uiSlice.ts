@@ -9,11 +9,23 @@ export type UiMessage = {
 export type UiState = {
   messageQueue: UiMessage[];
   guestMode: boolean;
+  darkMode: boolean;
+};
+
+// Load dark mode preference from localStorage
+const loadDarkModePreference = (): boolean => {
+  try {
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  } catch {
+    return false;
+  }
 };
 
 const initialState: UiState = {
   messageQueue: [],
   guestMode: false,
+  darkMode: loadDarkModePreference(),
 };
 
 const uiSlice = createSlice({
@@ -35,8 +47,26 @@ const uiSlice = createSlice({
     disableGuestMode(state) {
       state.guestMode = false;
     },
+    toggleDarkMode(state) {
+      state.darkMode = !state.darkMode;
+      // Persist to localStorage
+      try {
+        localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
+      } catch (error) {
+        console.error('Failed to save dark mode preference:', error);
+      }
+    },
+    setDarkMode(state, action: PayloadAction<boolean>) {
+      state.darkMode = action.payload;
+      // Persist to localStorage
+      try {
+        localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
+      } catch (error) {
+        console.error('Failed to save dark mode preference:', error);
+      }
+    },
   },
 });
 
-export const { enqueueMessage, dequeueMessage, clearMessages, enableGuestMode, disableGuestMode } = uiSlice.actions;
+export const { enqueueMessage, dequeueMessage, clearMessages, enableGuestMode, disableGuestMode, toggleDarkMode, setDarkMode } = uiSlice.actions;
 export default uiSlice.reducer;
