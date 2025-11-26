@@ -1,6 +1,6 @@
 // Color constants for the PrepMe application
 
-export const colors = {
+export const lightColors = {
   // Primary brand colors with gradient capability
   primary: {
     main: '#6366f1', // Indigo
@@ -84,17 +84,110 @@ export const colors = {
   },
 };
 
+// Dark mode color palette
+export const darkColors = {
+  // Primary brand colors with gradient capability
+  primary: {
+    main: '#818cf8', // Lighter indigo for dark mode
+    light: '#a5b4fc',
+    lighter: '#c7d2fe',
+    dark: '#6366f1',
+    darker: '#4f46e5',
+  },
+
+  // Secondary accent colors
+  secondary: {
+    main: '#a78bfa', // Lighter purple
+    light: '#c4b5fd',
+    dark: '#8b5cf6',
+  },
+
+  // Semantic colors
+  success: {
+    main: '#34d399', // Lighter green
+    light: '#6ee7b7',
+    dark: '#10b981',
+    bg: '#065f46',
+  },
+
+  warning: {
+    main: '#fbbf24', // Lighter amber
+    light: '#fcd34d',
+    dark: '#f59e0b',
+    bg: '#78350f',
+  },
+
+  error: {
+    main: '#f87171', // Lighter red
+    light: '#fca5a5',
+    dark: '#ef4444',
+    bg: '#7f1d1d',
+  },
+
+  info: {
+    main: '#60a5fa', // Lighter blue
+    light: '#93c5fd',
+    dark: '#3b82f6',
+    bg: '#1e3a8a',
+  },
+
+  // Category colors - adjusted for dark mode
+  categoryColors: [
+    { bg: '#78350f', border: '#fbbf24', text: '#fef3c7' }, // Amber
+    { bg: '#1e3a8a', border: '#60a5fa', text: '#dbeafe' }, // Blue
+    { bg: '#065f46', border: '#34d399', text: '#d1fae5' }, // Green
+    { bg: '#831843', border: '#f472b6', text: '#fce7f3' }, // Pink
+    { bg: '#5b21b6', border: '#a78bfa', text: '#ede9fe' }, // Purple
+    { bg: '#7c2d12', border: '#fb923c', text: '#fed7aa' }, // Orange
+    { bg: '#134e4a', border: '#2dd4bf', text: '#ccfbf1' }, // Teal
+    { bg: '#701a75', border: '#e879f9', text: '#fae8ff' }, // Fuchsia
+    { bg: '#312e81', border: '#818cf8', text: '#e0e7ff' }, // Indigo
+    { bg: '#14532d', border: '#4ade80', text: '#dcfce7' }, // Lime
+  ],
+
+  // Neutral colors (darker variants)
+  neutral: {
+    50: '#1f2937',
+    100: '#374151',
+    200: '#4b5563',
+    300: '#6b7280',
+    400: '#9ca3af',
+    500: '#d1d5db',
+    600: '#e5e7eb',
+    700: '#f3f4f6',
+    800: '#f9fafb',
+    900: '#ffffff',
+  },
+
+  // Gradient combinations
+  gradients: {
+    primary: 'linear-gradient(135deg, #818cf8 0%, #a78bfa 100%)',
+    warm: 'linear-gradient(135deg, #fbbf24 0%, #f87171 100%)',
+    cool: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+    success: 'linear-gradient(135deg, #34d399 0%, #2dd4bf 100%)',
+    sunset: 'linear-gradient(135deg, #fbbf24 0%, #f472b6 100%)',
+  },
+};
+
+// Default to light colors for backward compatibility
+export const colors = lightColors;
+
 // Helper function to get a category color by index
-export const getCategoryColor = (index: number) => {
-  return colors.categoryColors[index % colors.categoryColors.length];
+export const getCategoryColor = (index: number, isDark = false) => {
+  const palette = isDark ? darkColors : lightColors;
+  return palette.categoryColors[index % palette.categoryColors.length];
 };
 
 // Helper function to generate a color from a string (for consistent category colors)
-export const getColorFromString = (str: string) => {
+export const getColorFromString = (str: string, isDark = false) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const index = Math.abs(hash) % colors.categoryColors.length;
-  return colors.categoryColors[index];
+  const palette = isDark ? darkColors : lightColors;
+  const index = Math.abs(hash) % palette.categoryColors.length;
+  return palette.categoryColors[index];
 };
+
+// Helper function to get the appropriate color palette based on theme
+export const getColors = (isDark: boolean) => isDark ? darkColors : lightColors;

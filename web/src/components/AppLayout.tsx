@@ -3,20 +3,32 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useFirebaseUser } from '@/hooks/useFirebaseUser';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { useMemo, useState, type ReactNode } from 'react';
-import { MenuOutlined } from '@ant-design/icons';
-import { useAppSelector } from '@/redux/hooks';
+import { useMemo, useState, useEffect, type ReactNode } from 'react';
+import { MenuOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
+import { useAppSelector, useAppDispatch } from '@/redux/hooks';
+import { toggleDarkMode } from '@/redux/uiSlice';
 
 const { Header, Content } = Layout;
 
 export default function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { user } = useFirebaseUser();
   const guestMode = useAppSelector((s) => s.ui.guestMode);
+  const darkMode = useAppSelector((s) => s.ui.darkMode);
   const screens = Grid.useBreakpoint();
   const isMobile = useMemo(() => !screens.md, [screens]);
   const [open, setOpen] = useState(false);
+
+  // Apply theme to document root
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [darkMode]);
   const items = useMemo(() => {
     const inAuth = location.pathname.startsWith('/auth');
     const base = inAuth ? '/auth' : '';
@@ -69,6 +81,13 @@ export default function AppLayout() {
         </div>
         <div>
           <Space>
+            <Button
+              icon={darkMode ? <SunOutlined /> : <MoonOutlined />}
+              onClick={() => dispatch(toggleDarkMode())}
+              aria-label="Toggle theme"
+              style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff' }}
+              title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            />
             {isMobile && (
               <Button
                 icon={<MenuOutlined />}
