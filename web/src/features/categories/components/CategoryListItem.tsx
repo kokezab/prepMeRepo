@@ -21,9 +21,9 @@ export default function CategoryListItem({category}: { category: Category }) {
         deleteCategory(category.id);
     }
 
-    // Dark mode aware background
+    // Dark mode aware background with better contrast
     const bgGradient = darkMode
-        ? `linear-gradient(135deg, ${color.bg} 0%, #1f2937 100%)`
+        ? `linear-gradient(135deg, ${color.bg} 0%, #1e293b 100%)`
         : `linear-gradient(135deg, ${color.bg} 0%, #ffffff 100%)`;
 
     return (

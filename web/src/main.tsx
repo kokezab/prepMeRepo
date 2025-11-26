@@ -28,8 +28,11 @@ function ThemedApp() {
                     colorError: colors.error.main,
                     colorInfo: colors.info.main,
                     borderRadius: 8,
-                    colorBgContainer: darkMode ? '#1f2937' : '#ffffff',
-                    colorBorder: darkMode ? colors.neutral[200] : lightColors.neutral[200],
+                    colorBgContainer: darkMode ? '#1e293b' : '#ffffff',
+                    colorBgElevated: darkMode ? '#1e293b' : '#ffffff',
+                    colorBorder: darkMode ? '#475569' : lightColors.neutral[200],
+                    colorText: darkMode ? '#f1f5f9' : '#111827',
+                    colorTextSecondary: darkMode ? '#cbd5e1' : '#6b7280',
                 },
                 components: {
                     Button: {
@@ -44,6 +47,13 @@ function ThemedApp() {
                     },
                     Select: {
                         controlHeight: 36,
+                    },
+                    Modal: {
+                        contentBg: darkMode ? '#1e293b' : '#ffffff',
+                        headerBg: darkMode ? '#1e293b' : '#ffffff',
+                    },
+                    Drawer: {
+                        colorBgElevated: darkMode ? '#1e293b' : '#ffffff',
                     },
                 },
             }}

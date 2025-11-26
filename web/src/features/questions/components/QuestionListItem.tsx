@@ -31,14 +31,14 @@ export default function QuestionListItem({ question, onEdit, onDelete, onView, o
     }
   };
 
-  // Dark mode aware colors
+  // Dark mode aware colors with better contrast
   const completedBorderColor = darkMode ? '#34d399' : '#10b981';
   const defaultBorderColor = darkMode ? '#818cf8' : '#6366f1';
   const completedBgGradient = darkMode
-    ? 'linear-gradient(135deg, #1f2937 0%, #065f46 100%)'
+    ? 'linear-gradient(135deg, #1e293b 0%, #0f4c3a 100%)'
     : 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)';
   const defaultBgGradient = darkMode
-    ? 'linear-gradient(135deg, #1f2937 0%, #374151 100%)'
+    ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
     : 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)';
 
   return (
